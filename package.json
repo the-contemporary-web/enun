@@ -1,0 +1,19 @@
+{
+  "name": "enun",
+  "packageManager": "yarn@4.5.3",
+  "workspaces": [
+    "demo",
+    "package/*"
+  ],
+  "scripts": {
+    "demo": "yarn workspace demo",
+    "store": "yarn workspace @enun/store",
+    "react": "yarn workspace @enun/react",
+    "lint:check": "yarn workspaces foreach -A -p run lint:check",
+    "lint:fix": "yarn workspaces foreach -A -p run lint:fix",
+    "format:fix": "yarn workspaces foreach -A -p run format:fix"
+  },
+  "devDependencies": {
+    "prettier": "^3.5.3"
+  }
+}
