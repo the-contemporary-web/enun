@@ -1,5 +1,6 @@
 import "./App.css";
 
+import { Test, test } from "@enun/store";
 import { useState } from "react";
 
 import viteLogo from "/vite.svg";
@@ -8,6 +9,8 @@ import reactLogo from "./assets/react.svg";
 
 function App() {
   const [count, setCount] = useState(0);
+  const a = {} as Test;
+  test();
 
   return (
     <>
