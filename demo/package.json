@@ -12,6 +12,7 @@
     "format:fix": "prettier . --write"
   },
   "dependencies": {
+    "@enun/react": "workspace:^",
     "@enun/store": "workspace:^",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

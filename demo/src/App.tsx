@@ -1,6 +1,6 @@
 import "./App.css";
 
-import { Test, test } from "@enun/store";
+import { useTest } from "@enun/react";
 import { useState } from "react";
 
 import viteLogo from "/vite.svg";
@@ -9,12 +9,13 @@ import reactLogo from "./assets/react.svg";
 
 function App() {
   const [count, setCount] = useState(0);
-  const a = {} as Test;
-  test();
+
+  const { test } = useTest();
 
   return (
     <>
       <div>
+        <button onClick={test}>test</button>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
