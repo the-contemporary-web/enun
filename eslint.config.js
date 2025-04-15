@@ -6,7 +6,8 @@ import simpleImportSort from "eslint-plugin-simple-import-sort";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["dist"] },
+  { ignores: ["**/dist"] },
+  // Base rules
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ["**/*.{ts,tsx}"],
@@ -15,15 +16,23 @@ export default tseslint.config(
       globals: globals.browser,
     },
     plugins: {
+      "simple-import-sort": simpleImportSort,
+    },
+    rules: {
+      "simple-import-sort/imports": "error",
+      "simple-import-sort/exports": "error",
+    },
+  },
+  //
+  {
+    files: ["package/react/**/*.{ts,tsx}", "demo/**/*.{ts,tsx}"],
+    plugins: {
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
-      "simple-import-sort": simpleImportSort,
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
-      "simple-import-sort/imports": "error",
-      "simple-import-sort/exports": "error",
     },
   },
 );

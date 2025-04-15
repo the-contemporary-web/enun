@@ -1,6 +1,7 @@
 {
   "name": "enun",
   "packageManager": "yarn@4.5.3",
+  "type": "module",
   "workspaces": [
     "demo",
     "package/*"
@@ -14,6 +15,13 @@
     "format:fix": "yarn workspaces foreach -A -p run format:fix"
   },
   "devDependencies": {
-    "prettier": "^3.5.3"
+    "eslint": "^9.24.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "globals": "^16.0.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.30.1"
   }
 }
