@@ -234,9 +234,11 @@ __metadata:
   resolution: "@enun/store@workspace:package/store"
   dependencies:
     "@types/node": "npm:^22.14.1"
+    nanoid: "npm:^5.1.5"
     typescript: "npm:^5.8.3"
     vite: "npm:^6.2.0"
     vite-plugin-dts: "npm:^4.5.3"
+    zustand: "npm:^5.0.3"
   languageName: unknown
   linkType: soft
 
@@ -507,6 +509,26 @@ __metadata:
     "@eslint/core": "npm:^0.13.0"
     levn: "npm:^0.4.1"
   checksum: 10/2e7fe7a88ebdbbf805e9e7265347b7dcfb6bf50beec314def997572b2e8ae4a7b9504fb67b1698a70c348a0dd87251d1e9028292a96fd49b58cb5277d88bdea7
+  languageName: node
+  linkType: hard
+
+"@flexive/core@npm:^0.5.9":
+  version: 0.5.9
+  resolution: "@flexive/core@npm:0.5.9"
+  peerDependencies:
+    react: ^18.2.0
+  checksum: 10/2523543f4b8ff4e4601fe7715c05e44e0a33ffb897da2ad3081809d1cf974e02113c97bf45ec08de9c345fade0c6a8a47cc4d8ce8ed874288103dbbc17dd61c4
+  languageName: node
+  linkType: hard
+
+"@flexive/operator@npm:^0.3.4":
+  version: 0.3.4
+  resolution: "@flexive/operator@npm:0.3.4"
+  dependencies:
+    fast-deep-equal: "npm:^3.1.3"
+  peerDependencies:
+    react: ^18.2.0
+  checksum: 10/9c783047adbc511202fb2405a07731ad740caa072cac1b27a461c0fd67301913ee92abcabb5af4e2e7d968e4bed9458c715438fd9dfc82b0f2cd91d66eaedb2b
   languageName: node
   linkType: hard
 
@@ -1600,6 +1622,8 @@ __metadata:
   dependencies:
     "@enun/react": "workspace:^"
     "@enun/store": "workspace:^"
+    "@flexive/core": "npm:^0.5.9"
+    "@flexive/operator": "npm:^0.3.4"
     "@types/react": "npm:^19.0.10"
     "@types/react-dom": "npm:^19.0.4"
     "@vitejs/plugin-react": "npm:^4.3.4"
@@ -2723,6 +2747,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"nanoid@npm:^5.1.5":
+  version: 5.1.5
+  resolution: "nanoid@npm:5.1.5"
+  bin:
+    nanoid: bin/nanoid.js
+  checksum: 10/6de2d006b51c983be385ef7ee285f7f2a57bd96f8c0ca881c4111461644bd81fafc2544f8e07cb834ca0f3e0f3f676c1fe78052183f008b0809efe6e273119f5
+  languageName: node
+  linkType: hard
+
 "natural-compare@npm:^1.4.0":
   version: 1.4.0
   resolution: "natural-compare@npm:1.4.0"
@@ -3681,5 +3714,26 @@ __metadata:
   version: 0.1.0
   resolution: "yocto-queue@npm:0.1.0"
   checksum: 10/f77b3d8d00310def622123df93d4ee654fc6a0096182af8bd60679ddcdfb3474c56c6c7190817c84a2785648cdee9d721c0154eb45698c62176c322fb46fc700
+  languageName: node
+  linkType: hard
+
+"zustand@npm:^5.0.3":
+  version: 5.0.3
+  resolution: "zustand@npm:5.0.3"
+  peerDependencies:
+    "@types/react": ">=18.0.0"
+    immer: ">=9.0.6"
+    react: ">=18.0.0"
+    use-sync-external-store: ">=1.2.0"
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    immer:
+      optional: true
+    react:
+      optional: true
+    use-sync-external-store:
+      optional: true
+  checksum: 10/35728fdaa68291ea3e469524316dda4fe1d8cc22d8be3df309ca99bda0dbc7e66a1c502f66c26f76abfb4bd49a6e1368160353eb3cb173c24042a5f252075462
   languageName: node
   linkType: hard
