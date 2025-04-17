@@ -4,14 +4,17 @@ import { Subscriber, ZustandStore } from "./type";
 interface StoreImplParam<T extends object> {
   key: HashedKey;
   store: ZustandStore<T>;
+  onDestroy: () => void;
 }
 class StoreImpl<T extends object> {
+  private onDestroy: () => void;
   public key: HashedKey;
   public zustandStore: ZustandStore<T>;
 
-  constructor({ key, store }: StoreImplParam<T>) {
+  constructor({ key, store, onDestroy }: StoreImplParam<T>) {
     this.key = key;
     this.zustandStore = store;
+    this.onDestroy = onDestroy;
   }
 
   public get() {
@@ -23,6 +26,7 @@ class StoreImpl<T extends object> {
   }
 
   public destroy() {
+    this.onDestroy();
     globalCacheManager.release({ key: this.key });
   }
 }

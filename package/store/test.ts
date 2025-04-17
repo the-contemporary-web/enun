@@ -1,7 +1,7 @@
 import { useStore } from "zustand";
 import { createStore } from "zustand/vanilla";
 
-import { create, globalCacheManager } from "./index";
+import { create, globalCacheManager, StoreImpl } from "./index";
 
 /**
  * Zustand Test
@@ -74,13 +74,51 @@ inspectCacheMap();
 globalTextStore.destroy();
 
 setTimeout(() => {
-  inspectCacheMap(); // expect 2
+  inspectCacheMap();
   globalTextStore2.destroy();
   setTimeout(() => {
-    inspectCacheMap(); // expect 1
+    inspectCacheMap();
     localTextStore.destroy();
     setTimeout(() => {
-      inspectCacheMap(); // expect 0
+      inspectCacheMap();
     }, 1000);
   }, 1000);
 }, 1000);
+
+/**
+ * Compose Text
+ */
+
+interface TextWithCountStore {
+  textStore: StoreImpl<TextStore>;
+  count: number;
+}
+
+const TextWithCountStore = create<TextWithCountStore, { text: string }>()
+  .compose(({ text }) => ({
+    textStore: TextStore.appendKey({ purpose: "countTest" }).local().use({ text }),
+  }))
+  .define(({ injected, composed, set }) => {
+    composed.textStore.subscribe(({ text }) => {
+      set({
+        count: text.length,
+      });
+    });
+
+    return {
+      textStore: composed.textStore,
+      count: injected.text.length,
+    };
+  });
+
+const globalTextWithCountStore = TextWithCountStore.use({ text: "" });
+
+const inspectCount = () => {
+  console.log("text:", globalTextWithCountStore.get().textStore.get().text);
+  console.log("count:", globalTextWithCountStore.get().count);
+};
+
+inspectCount();
+globalTextWithCountStore.get().textStore.get().write("hello, world");
+inspectCount();
+globalTextWithCountStore.destroy();
