@@ -1,5 +1,5 @@
 import { StoreImpl } from "@enun/store";
-import { PropsWithChildren, useContext, useEffect, useMemo } from "react";
+import { PropsWithChildren, useContext, useMemo } from "react";
 
 import { StoreContext, StoreMap } from "./StoreContext";
 
@@ -13,9 +13,6 @@ const StoreProvider = ({ children, store }: StoreProviderProps) => {
     () => toStoreMap(store),
     store.map(s => s.key),
   );
-
-  useEffect(() => {}, []);
-
   return <StoreContext value={{ storeMap: { ...storeMap, ...newStoreMap } }}>{children}</StoreContext>;
 };
 

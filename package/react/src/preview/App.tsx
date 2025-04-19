@@ -1,13 +1,17 @@
 import { StoreProvider } from "../context";
+import { useStoreInit } from "../useStoreInit";
 import { TextStore, useTextStore, useTextStoreLocal } from "./store";
 
 export const App = () => {
+  const store1 = useStoreInit(TextStore, { text: "Hello world" });
+  const store2 = useStoreInit(TextStore, { id: 1, text: "Hello world2" });
+
   return (
     <div>
-      <StoreProvider store={[TextStore.use({ text: "Hello world" })]}>
+      <StoreProvider store={[store1]}>
         <TextInput />
         <TextInput />
-        <StoreProvider store={[TextStore.use({ id: 1, text: "Hello world2" })]}>
+        <StoreProvider store={[store2]}>
           <TextInput />
         </StoreProvider>
         <TextInputLocal />

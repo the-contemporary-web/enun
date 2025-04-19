@@ -28,8 +28,7 @@ class Store<T extends object, Deps extends object, Composed extends ComposeMap> 
   }
 
   public use(deps: Deps) {
-    const keyDeps = this.getKeyDeps?.(deps);
-    const key = KeyHelper.hash([this.fingerPrint, ...this.additionalKeys, keyDeps]);
+    const key = this.hashKey(deps);
 
     const init = () => {
       const composed = (this.composeStore?.(deps) ?? {}) as Composed;
@@ -50,6 +49,11 @@ class Store<T extends object, Deps extends object, Composed extends ComposeMap> 
       key,
       init,
     });
+  }
+
+  public hashKey(deps: Deps) {
+    const keyDeps = this.getKeyDeps?.(deps);
+    return KeyHelper.hash([this.fingerPrint, ...this.additionalKeys, keyDeps]);
   }
 
   private clone() {
