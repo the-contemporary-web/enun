@@ -14,6 +14,9 @@
   "dependencies": {
     "@enun/react": "workspace:^",
     "@enun/store": "workspace:^",
+    "@flexive/core": "^0.5.9",
+    "@flexive/operator": "^0.3.4",
+    "nanoid": "^5.1.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
@@ -22,6 +25,7 @@
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
     "typescript": "^5.8.3",
-    "vite": "^6.2.0"
+    "vite": "^6.2.0",
+    "vite-tsconfig-paths": "^5.1.4"
   }
 }
