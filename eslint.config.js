@@ -6,7 +6,7 @@ import simpleImportSort from "eslint-plugin-simple-import-sort";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["**/dist"] },
+  { ignores: ["**/dist", "**/vite.config.ts"] },
   // Base Rules
   {
     extends: [js.configs.recommended, ...tseslint.configs.strictTypeChecked, ...tseslint.configs.stylisticTypeChecked],
@@ -25,6 +25,7 @@ export default tseslint.config(
     rules: {
       "@typescript-eslint/consistent-type-definitions": "off",
       "@typescript-eslint/prefer-function-type": "off",
+      "@typescript-eslint/no-unnecessary-type-parameters": "warn",
       "simple-import-sort/imports": "error",
       "simple-import-sort/exports": "error",
     },
