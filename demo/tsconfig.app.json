@@ -20,9 +20,15 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
 
     /* Path Alias */
+    "paths": {
+      "*": ["./src/*"],
+      "@constant/*": ["./src/core/constant/*"],
+      "@entity/*": ["./src/core/entity/*"],
+      "@store/*": ["./src/core/store/*"]
+    }
   },
   "include": ["src"]
 }

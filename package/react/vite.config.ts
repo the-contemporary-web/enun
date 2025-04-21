@@ -14,5 +14,8 @@ export default defineConfig({
       fileName: (module, entry) => `${entry}.${module === "es" ? "m" : "c"}js`,
       entry: resolve(__dirname, "index.ts"),
     },
+    rollupOptions: {
+      external: ["react", "react/jsx-runtime"],
+    },
   },
 });
