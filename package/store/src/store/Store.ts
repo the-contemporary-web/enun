@@ -34,7 +34,9 @@ class Store<T extends object, Deps extends object, Composed extends ComposeMap> 
       const composed = (this.composeStore?.(deps) ?? {}) as Composed;
       const zustandStore = createStore<T>()(set => this.defineStore({ injected: deps, composed, set }));
       const onDestroy = () => {
-        Object.values(composed).forEach(store => store.destroy());
+        Object.values(composed).forEach(store => {
+          store.destroy();
+        });
       };
 
       return new StoreImpl({

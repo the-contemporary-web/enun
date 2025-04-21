@@ -19,19 +19,22 @@ const TodoStore = create<TodoStore, { todo: Todo }>()
     }),
   }))
   .define(({ injected: { todo }, composed: { reportStore }, set }) => {
-    const setName = (name: Todo["name"]) => set(({ todo }) => ({ todo: { ...todo, name } }));
-    const toggle = () =>
+    const setName = (name: Todo["name"]) => {
+      set(({ todo }) => ({ todo: { ...todo, name } }));
+    };
+    const toggle = () => {
       set(({ todo }) => {
         if (todo.type !== "TOGGLE") return {};
         return { todo: { ...todo, done: !todo.done } };
       });
+    };
 
-    reportStore.subscribe(({ contentLength }) =>
+    reportStore.subscribe(({ contentLength }) => {
       set(({ todo }) => {
         if (todo.type !== "REPORT") return {};
         return { todo: { ...todo, done: contentLength >= todo.minReportLength } };
-      }),
-    );
+      });
+    });
 
     return {
       todo,

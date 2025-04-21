@@ -12,11 +12,12 @@ interface RichTextContentStore {
 
 const RichTextContentStore = create<RichTextContentStore, { content?: RichTextContent }>().define(
   ({ set, injected }) => {
-    const writeContent = (content: RichTextContent) =>
+    const writeContent = (content: RichTextContent) => {
       set({
         content,
         contentLength: content.length,
       });
+    };
 
     return {
       content: injected.content ?? RichTextContentHelper.getInitialContent(),
