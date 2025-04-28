@@ -1,0 +1,61 @@
+.object-p {
+  background-color: var(--p9);
+  box-shadow: 0 0 5px var(--p7);
+  color: var(--c-0-1);
+}
+.object-p.pointable:hover {
+  background-color: var(--p11);
+  box-shadow: 0 0 5px var(--p5);
+}
+.object-p.pointable:active {
+  background-color: var(--p12);
+  box-shadow: 0 0 2px var(--p3);
+  color: var(--c-0-5);
+}
+
+.object-s {
+  background-color: var(--s9);
+  box-shadow: 0 0 5px var(--s7);
+  color: var(--c-0-1);
+}
+.object-s.pointable:hover {
+  background-color: var(--s11);
+  box-shadow: 0 0 5px var(--s5);
+}
+.object-s.pointable:active {
+  background-color: var(--s12);
+  box-shadow: 0 0 2px var(--s3);
+  color: var(--c-0-5);
+}
+
+.object-g {
+  border: 1px solid var(--c-0-4);
+  background-color: var(--c-0-1);
+  color: var(--c-0-10);
+}
+.object-g.pointable:hover {
+  background-color: var(--c-0-2);
+}
+.object-g.pointable:active {
+  border: 1px solid var(--c-0-6);
+  background-color: var(--c-0-5);
+}
+.object-g.pointable.selected {
+  border: 1px solid var(--c-0-6);
+  background-color: var(--c-0-3);
+  color: var(--c-0-12);
+}
+.object-g.pointable.selected:active {
+  background-color: var(--c-0-5);
+}
+
+.object-p:disabled,
+.object-p.disabled,
+.object-s:disabled,
+.object-s.disabled,
+.object-g:disabled,
+.object-g.disabled {
+  background-color: var(--c-0-8);
+  color: var(--c-0-2);
+  box-shadow: none;
+}

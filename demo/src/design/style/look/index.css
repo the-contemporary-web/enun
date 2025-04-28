@@ -1,0 +1,24 @@
+@import "./solid.scss";
+@import "./light.scss";
+@import "./floating.scss";
+* {
+  --c-content: inherit;
+  --c-background: transparent;
+  --c-border: transparent;
+  --c-shadow: none;
+
+  border-color: var(--c-border);
+  background: var(--c-background);
+  color: var(--c-content);
+  box-shadow: var(--c-shadow);
+}
+
+.pointable {
+  cursor: pointer;
+  user-select: none;
+}
+
+:disabled,
+.disabled {
+  cursor: default;
+}

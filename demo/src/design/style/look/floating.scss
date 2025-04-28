@@ -1,0 +1,23 @@
+.floating {
+  --c-border: 1px solid var(--c-0-4);
+  --c-background: var(--c-0-1);
+  --c-shadow: 0 4px 16px var(--c-0-4), 0 0 4px var(--c-0-3);
+  border-radius: 12px;
+  &.focusable {
+    --c-background: var(--c-0-2);
+    --c-shadow: 0 2px 8px var(--c-0-3), 0 0 2px var(--c-0-2);
+
+    &.focus,
+    &:focus {
+      --c-background: var(--c-0-1);
+      --c-shadow: 0 4px 16px var(--c-0-4), 0 0 4px var(--c-0-3);
+    }
+  }
+  &.disablable {
+    &.disabled,
+    &:disabled {
+      background-color: var(--c-0-3);
+      box-shadow: 0 0 4px var(--c-0-3);
+    }
+  }
+}
