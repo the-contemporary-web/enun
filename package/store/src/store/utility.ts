@@ -1,8 +1,6 @@
 import { Store } from "./Store";
-import { ComposeMap } from "./type";
 
-type TypeOf<S extends Store<object, object, ComposeMap>> = S extends Store<infer T, object, ComposeMap> ? T : never;
-type DepsOf<S extends Store<object, object, ComposeMap>> =
-  S extends Store<object, infer Deps, ComposeMap> ? Deps : never;
+type TypeOf<S extends Store<object, object>> = S extends Store<infer T, object> ? T : never;
+type DepsOf<S extends Store<object, object>> = S extends Store<object, infer Deps> ? Deps : never;
 
 export type { DepsOf, TypeOf };

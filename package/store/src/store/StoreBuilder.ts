@@ -1,43 +1,31 @@
 import { Store } from "./Store";
-import { ComposeMap, Composer, DefineStore, GetKeyDeps } from "./type";
+import { DefineStore, GetKeyDeps } from "./type";
 
-interface StoreBuilderParam<T extends object, Deps extends object, Composed extends ComposeMap> {
-  defineStore?: DefineStore<T, Deps, Composed>;
+interface StoreBuilderParam<T extends object, Deps extends object> {
+  defineStore?: DefineStore<T, Deps>;
   getKeyDeps?: GetKeyDeps<Deps>;
-  composeStore?: Composer<Deps, Composed>;
 }
 
-class StoreBuilder<T extends object, Deps extends object, Composed extends ComposeMap> {
-  private defineStore?: DefineStore<T, Deps, Composed>;
+class StoreBuilder<T extends object, Deps extends object> {
+  private defineStore?: DefineStore<T, Deps>;
   private getKeyDeps?: GetKeyDeps<Deps>;
-  private composeStore?: Composer<Deps, Composed>;
 
-  constructor({ defineStore, getKeyDeps, composeStore }: StoreBuilderParam<T, Deps, Composed>) {
+  constructor({ defineStore, getKeyDeps }: StoreBuilderParam<T, Deps>) {
     this.defineStore = defineStore;
     this.getKeyDeps = getKeyDeps;
-    this.composeStore = composeStore;
   }
 
-  public define(defineFn: DefineStore<T, Deps, Composed>) {
+  public define(defineFn: DefineStore<T, Deps>) {
     this.defineStore = defineFn;
-    return new Store<T, Deps, Composed>({
+    return new Store<T, Deps>({
       defineStore: this.defineStore,
       getKeyDeps: this.getKeyDeps,
-      composeStore: this.composeStore,
     });
   }
 
   public key(getFn: GetKeyDeps<Deps>) {
-    return new StoreBuilder<T, Deps, Composed>({
+    return new StoreBuilder<T, Deps>({
       getKeyDeps: getFn,
-      composeStore: this.composeStore,
-    });
-  }
-
-  public compose<C extends ComposeMap>(composer: Composer<Deps, C>) {
-    return new StoreBuilder<T, Deps, C>({
-      getKeyDeps: this.getKeyDeps,
-      composeStore: composer,
     });
   }
 }

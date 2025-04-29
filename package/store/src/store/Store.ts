@@ -2,40 +2,47 @@ import { createStore } from "zustand";
 
 import { globalCacheManager, KeyHelper, RawKey } from "../cache";
 import { StoreImpl } from "./StoreImpl";
-import { ComposeMap, Composer, DefineStore, GetKeyDeps } from "./type";
+import { DefineStore, Destroyable, GetKeyDeps } from "./type";
 
-interface StoreParam<T extends object, Deps extends object, Composed extends ComposeMap> {
+interface StoreParam<T extends object, Deps extends object> {
   fingerPrint?: string;
   additionalKeys?: RawKey[];
-  defineStore: DefineStore<T, Deps, Composed>;
+  defineStore: DefineStore<T, Deps>;
   getKeyDeps?: GetKeyDeps<Deps>;
-  composeStore?: Composer<Deps, Composed>;
 }
 
-class Store<T extends object, Deps extends object, Composed extends ComposeMap> {
+class Store<T extends object, Deps extends object> {
   public fingerPrint: string;
   public additionalKeys: RawKey[];
-  private defineStore: DefineStore<T, Deps, Composed>;
+  private defineStore: DefineStore<T, Deps>;
   private getKeyDeps?: GetKeyDeps<Deps>;
-  private composeStore?: Composer<Deps, Composed>;
+  private toDestroy: Destroyable[];
 
-  constructor({ fingerPrint, additionalKeys, defineStore, getKeyDeps, composeStore }: StoreParam<T, Deps, Composed>) {
+  constructor({ fingerPrint, additionalKeys, defineStore, getKeyDeps }: StoreParam<T, Deps>) {
     this.fingerPrint = fingerPrint ?? KeyHelper.random();
     this.additionalKeys = additionalKeys ?? [];
     this.defineStore = defineStore;
     this.getKeyDeps = getKeyDeps;
-    this.composeStore = composeStore;
+    this.toDestroy = [];
   }
 
   public use(deps: Deps) {
     const key = this.hashKey(deps);
 
     const init = () => {
-      const composed = (this.composeStore?.(deps) ?? {}) as Composed;
-      const zustandStore = createStore<T>()(set => this.defineStore({ injected: deps, composed, set }));
+      const zustandStore = createStore<T>()(set =>
+        this.defineStore({
+          injected: deps,
+          set,
+          compose: destroyable => {
+            this.toDestroy.push(destroyable);
+            return destroyable;
+          },
+        }),
+      );
       const onDestroy = () => {
-        Object.values(composed).forEach(store => {
-          store.destroy();
+        this.toDestroy.forEach(destroyable => {
+          destroyable.destroy();
         });
       };
 
@@ -64,7 +71,6 @@ class Store<T extends object, Deps extends object, Composed extends ComposeMap> 
       additionalKeys: [...this.additionalKeys],
       defineStore: this.defineStore,
       getKeyDeps: this.getKeyDeps,
-      composeStore: this.composeStore,
     });
   }
 
