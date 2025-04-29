@@ -1,12 +1,10 @@
-import { ComposeMap, Store, StoreImpl } from "@enun/store";
+import { Store, StoreImpl } from "@enun/store";
 import { useMemo } from "react";
 import { useStore as useZustandStore } from "zustand";
 
 import { useStoreFromContext } from "./context/StoreContext";
 
-const createHook = <T extends object, Deps extends object, Composed extends ComposeMap>(
-  store: Store<T, Deps, Composed>,
-) => {
+const createHook = <T extends object, Deps extends object>(store: Store<T, Deps>) => {
   const useStore = (props?: Deps) => {
     const fromContext = useStoreFromContext<T>({ fingerPrint: store.fingerPrint });
     const impl = useMemo(() => {
