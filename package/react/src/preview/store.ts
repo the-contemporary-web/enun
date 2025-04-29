@@ -12,8 +12,12 @@ interface TextStore {
 const TextStore = create<TextStore, { id?: number; text: string }>()
   .key(deps => deps.id)
   .define(({ injected, set }) => {
-    const write = (text: string) => set({ text });
-    const clear = () => set({ text: "" });
+    const write = (text: string) => {
+      set({ text });
+    };
+    const clear = () => {
+      set({ text: "" });
+    };
     return {
       id: injected.id,
       text: injected.text,

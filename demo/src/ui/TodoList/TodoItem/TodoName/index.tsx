@@ -7,6 +7,13 @@ export const TodoName = () => {
 
   const { todo, setName } = useTodoStore();
 
+  const handleEditStart = () => {
+    setEditable(true);
+  };
+  const handleEditEnd = () => {
+    setEditable(false);
+  };
+
   const handleChangeName: ChangeEventHandler<HTMLInputElement> = e => {
     setName(e.target.value);
   };
@@ -14,11 +21,11 @@ export const TodoName = () => {
   return (
     <Div f>
       {!editable && (
-        <Div f onClick={() => setEditable(true)}>
+        <Div f onClick={handleEditStart}>
           {todo.name}
         </Div>
       )}
-      {editable && <Input f value={todo.name} onChange={handleChangeName} onBlur={() => setEditable(false)} />}
+      {editable && <Input f value={todo.name} onChange={handleChangeName} onBlur={handleEditEnd} />}
     </Div>
   );
 };

@@ -22,10 +22,24 @@ export const App = () => {
 
 const TextInput = () => {
   const { text, write } = useTextStore();
-  return <input value={text} onChange={e => write(e.target.value)} />;
+  return (
+    <input
+      value={text}
+      onChange={e => {
+        write(e.target.value);
+      }}
+    />
+  );
 };
 
 const TextInputLocal = () => {
   const { text, write } = useTextStoreLocal({ text: "Hello local" });
-  return <input value={text} onChange={e => write(e.target.value)} />;
+  return (
+    <input
+      value={text}
+      onChange={e => {
+        write(e.target.value);
+      }}
+    />
+  );
 };

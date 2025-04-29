@@ -14,13 +14,16 @@ interface BearState {
 
 const bearStore = createStore<BearState>()(set => ({
   bears: 0,
-  increase: by => set(state => ({ bears: state.bears + by })),
+  increase: by => {
+    set(state => ({ bears: state.bears + by }));
+  },
 }));
 
 function useBearStore(): BearState;
 function useBearStore<T>(selector: (state: BearState) => T): T;
 function useBearStore<T>(selector?: (state: BearState) => T) {
-  return useStore(bearStore, selector!);
+  const selectorAsserted = selector ?? ((state: BearState) => state as T);
+  return useStore(bearStore, selectorAsserted);
 }
 console.log(useBearStore);
 
@@ -35,8 +38,12 @@ interface TextStore {
 }
 
 const TextStore = create<TextStore, { text: string }>().define(({ injected, set }) => {
-  const write = (text: string) => set({ text });
-  const clear = () => set({ text: "" });
+  const write = (text: string) => {
+    set({ text });
+  };
+  const clear = () => {
+    set({ text: "" });
+  };
 
   return {
     text: injected.text,
