@@ -12,7 +12,7 @@ class CacheManager {
   private get<T>({ key }: { key: string }) {
     return this.cacheMap.get(key) as T | undefined;
   }
-  private set<T>({ key, value }: { key: string; value: T }) {
+  private set({ key, value }: { key: string; value: unknown }) {
     this.cacheMap.set(key, value);
   }
   private remove({ key }: { key: string }) {
