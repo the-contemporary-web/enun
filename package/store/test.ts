@@ -73,6 +73,7 @@ inspect();
  * GC Test
  */
 const inspectCacheMap = () => {
+  console.log(Array.from(globalCacheManager.cacheMap.entries()));
   console.log("cache:", globalCacheManager.cacheMap.size);
   console.log("count:", globalCacheManager.countMap.size);
 };
@@ -101,22 +102,19 @@ interface TextWithCountStore {
   count: number;
 }
 
-const TextWithCountStore = create<TextWithCountStore, { text: string }>()
-  .compose(({ text }) => ({
-    textStore: TextStore.appendKey({ purpose: "countTest" }).local().use({ text }),
-  }))
-  .define(({ injected, composed, set }) => {
-    composed.textStore.subscribe(({ text }) => {
-      set({
-        count: text.length,
-      });
+const TextWithCountStore = create<TextWithCountStore, { text: string }>().define(({ injected, compose, set }) => {
+  const textStore = compose(TextStore.appendKey({ purpose: "countTest" }).local().use({ text: injected.text }));
+  textStore.subscribe(({ text }) => {
+    set({
+      count: text.length,
     });
-
-    return {
-      textStore: composed.textStore,
-      count: injected.text.length,
-    };
   });
+
+  return {
+    textStore,
+    count: injected.text.length,
+  };
+});
 
 const globalTextWithCountStore = TextWithCountStore.use({ text: "" });
 
@@ -128,4 +126,6 @@ const inspectCount = () => {
 inspectCount();
 globalTextWithCountStore.get().textStore.get().write("hello, world");
 inspectCount();
+inspectCacheMap();
 globalTextWithCountStore.destroy();
+inspectCacheMap();

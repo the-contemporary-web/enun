@@ -1,10 +1,7 @@
-import { ComposeMap, Store } from "@enun/store";
+import { Store } from "@enun/store";
 import { useEffect, useMemo } from "react";
 
-export const useStoreInit = <T extends object, Deps extends object, Composed extends ComposeMap>(
-  store: Store<T, Deps, Composed>,
-  deps: Deps,
-) => {
+export const useStoreInit = <T extends object, Deps extends object>(store: Store<T, Deps>, deps: Deps) => {
   const storeImpl = useMemo(() => {
     return store.use(deps);
   }, [store.hashKey(deps)]);
