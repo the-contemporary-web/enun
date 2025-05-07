@@ -1,6 +1,6 @@
 import { create } from "@enun/store";
 
-import { createHook } from "../createHook";
+import { createHook } from "../create/createHook";
 
 interface TextStore {
   id?: number;
@@ -26,7 +26,7 @@ const TextStore = create<TextStore, { id?: number; text: string }>()
     };
   });
 
-const useTextStore = createHook(TextStore);
-const useTextStoreLocal = createHook(TextStore.local());
+const [useText, useTextStore] = createHook(TextStore);
+const [useTextLocal] = createHook(TextStore.local());
 
-export { TextStore, useTextStore, useTextStoreLocal };
+export { TextStore, useText, useTextLocal, useTextStore };
