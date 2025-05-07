@@ -1,17 +1,16 @@
 import { StoreProvider } from "../context";
-import { useStoreInit } from "../useStoreInit";
-import { TextStore, useTextStore, useTextStoreLocal } from "./store";
+import { useText, useTextLocal, useTextStore } from "./store";
 
 export const App = () => {
-  const store1 = useStoreInit(TextStore, { text: "Hello world" });
-  const store2 = useStoreInit(TextStore, { id: 1, text: "Hello world2" });
+  const [textStore1] = useTextStore({ text: "Hello world" });
+  const [textStore2] = useTextStore({ id: 1, text: "Hello world2" });
 
   return (
     <div>
-      <StoreProvider store={[store1]}>
+      <StoreProvider store={[textStore1]}>
         <TextInput />
         <TextInput />
-        <StoreProvider store={[store2]}>
+        <StoreProvider store={[textStore2]}>
           <TextInput />
         </StoreProvider>
         <TextInputLocal />
@@ -21,7 +20,7 @@ export const App = () => {
 };
 
 const TextInput = () => {
-  const { text, write } = useTextStore();
+  const { text, write } = useText();
   return (
     <input
       value={text}
@@ -33,7 +32,7 @@ const TextInput = () => {
 };
 
 const TextInputLocal = () => {
-  const { text, write } = useTextStoreLocal({ text: "Hello local" });
+  const { text, write } = useTextLocal({ text: "Hello local" });
   return (
     <input
       value={text}
