@@ -27,6 +27,6 @@ const RichTextContentStore = create<RichTextContentStore, { content?: RichTextCo
   },
 );
 
-const useRichTextContentStore = createHook(RichTextContentStore);
+const useRichTextContent = createHook(RichTextContentStore);
 
-export { RichTextContentStore, useRichTextContentStore };
+export { RichTextContentStore, useRichTextContent };

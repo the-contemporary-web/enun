@@ -1,14 +1,19 @@
 import "./design/style/index.css";
 
+import { PaneRepository } from "core/repository/PaneRepository";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { MainPage } from "ui";
 
-const rootElement = document.getElementById("root");
-if (!rootElement) throw new Error("root element not found");
+const preloads = [PaneRepository.preload()];
 
-createRoot(rootElement).render(
-  <StrictMode>
-    <MainPage />
-  </StrictMode>,
-);
+void Promise.all(preloads).then(() => {
+  const rootElement = document.getElementById("root");
+  if (!rootElement) throw new Error("root element not found");
+
+  createRoot(rootElement).render(
+    <StrictMode>
+      <MainPage />
+    </StrictMode>,
+  );
+});

@@ -10,7 +10,7 @@ interface TodoItemProps {
 }
 
 export const TodoItem = ({ todo }: TodoItemProps) => {
-  const todoStore = useStoreInit(TodoStore, { todo });
+  const [todoStore] = useStoreInit(TodoStore, { todo });
 
   return (
     <StoreProvider store={[todoStore]}>

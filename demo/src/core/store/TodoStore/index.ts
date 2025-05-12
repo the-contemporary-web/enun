@@ -13,22 +13,24 @@ interface TodoStore {
 
 const TodoStore = create<TodoStore, { todo: Todo }>()
   .key(({ todo }) => ({ todoId: todo.id }))
-  .compose(({ todo }) => ({
-    reportStore: RichTextContentStore.appendKey({ name: "ReportTodo", todoId: todo.id }).use({
-      content: todo.type === "REPORT" ? todo.report : undefined,
-    }),
-  }))
-  .define(({ injected: { todo }, composed: { reportStore }, set }) => {
+  .define(({ injected: { todo }, compose, set }) => {
     const setName = (name: Todo["name"]) => {
       set(({ todo }) => ({ todo: { ...todo, name } }));
     };
     const toggle = () => {
       set(({ todo }) => {
-        if (todo.type !== "TOGGLE") return {};
+        if (todo.type !== "TOGGLE") {
+          return {};
+        }
         return { todo: { ...todo, done: !todo.done } };
       });
     };
 
+    const reportStore = compose(
+      RichTextContentStore.appendKey({ name: "ReportTodo", todoId: todo.id }).use({
+        content: todo.type === "REPORT" ? todo.report : undefined,
+      }),
+    );
     reportStore.subscribe(({ contentLength }) => {
       set(({ todo }) => {
         if (todo.type !== "REPORT") return {};
@@ -44,6 +46,6 @@ const TodoStore = create<TodoStore, { todo: Todo }>()
     };
   });
 
-const useTodoStore = createHook(TodoStore);
+const useTodo = createHook(TodoStore);
 
-export { TodoStore, useTodoStore };
+export { TodoStore, useTodo };
