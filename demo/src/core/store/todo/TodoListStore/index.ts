@@ -14,6 +14,6 @@ const TodoListStore = create<TodoListStore, { todoList: TodoList }>()
     };
   });
 
-const useTodoList = createHook(TodoListStore);
+const [useTodoList, useTodoListStore] = createHook(TodoListStore);
 
-export { TodoListStore, useTodoList };
+export { TodoListStore, useTodoList, useTodoListStore };

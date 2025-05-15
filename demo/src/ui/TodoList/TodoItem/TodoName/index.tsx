@@ -1,11 +1,11 @@
 import { Div, Input } from "@flexive/core";
-import { useTodoStore } from "core/store/TodoStore";
+import { useTodo } from "core/store/todo/TodoStore";
 import { ChangeEventHandler, useState } from "react";
 
 export const TodoName = () => {
   const [editable, setEditable] = useState(false);
 
-  const { todo, setName } = useTodoStore();
+  const { todo, setName } = useTodo();
 
   const handleEditStart = () => {
     setEditable(true);

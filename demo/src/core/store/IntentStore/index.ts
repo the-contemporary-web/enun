@@ -30,14 +30,14 @@ const DEFAULT_CONFIG: IntentConfig = {
   retryBusyRequest: false,
 };
 
-type CreateIntentStoreParam<O, I extends unknown[], Deps extends object> = {
+type CreateIntentStoreParam<O, I extends unknown[], Deps extends object = object> = {
   key: (deps: Deps) => RawKey;
   to: (deps: Deps, ...args: I) => Promise<O>;
   next?: (deps: Deps, output: O, ...args: I) => void;
   config?: Partial<IntentConfig>;
 };
 
-const createIntentStore = <O, I extends unknown[], Deps extends object>({
+const createIntentStore = <O, I extends unknown[], Deps extends object = object>({
   key,
   to,
   next,

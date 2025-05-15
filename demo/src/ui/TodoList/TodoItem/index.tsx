@@ -1,7 +1,7 @@
 import { Todo } from "@entity/Todo";
-import { StoreProvider, useStoreInit } from "@enun/react";
+import { StoreProvider } from "@enun/react";
 import { Li } from "@flexive/core";
-import { TodoStore } from "core/store/TodoStore";
+import { useTodoStore } from "core/store/todo/TodoStore";
 
 import { TodoName } from "./TodoName";
 
@@ -10,7 +10,7 @@ interface TodoItemProps {
 }
 
 export const TodoItem = ({ todo }: TodoItemProps) => {
-  const [todoStore] = useStoreInit(TodoStore, { todo });
+  const [todoStore] = useTodoStore({ todo });
 
   return (
     <StoreProvider store={[todoStore]}>

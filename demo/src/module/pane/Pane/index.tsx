@@ -1,5 +1,5 @@
 import { Article } from "@flexive/core";
-import { usePane } from "core/store/PaneStore";
+import { usePane } from "core/store/pane/PaneStore";
 
 import { usePaneDisplayStyle } from "../_hook/usePaneDisplayStyle";
 import { PaneHeader } from "./PaneHeader";

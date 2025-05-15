@@ -1,5 +1,5 @@
 import { StoreProvider } from "@enun/react";
-import { usePanes } from "core/store/PanesStore";
+import { usePanes } from "core/store/pane/PanesStore";
 import { Pane } from "module/pane/Pane";
 import { Catch } from "module/system/Catch";
 

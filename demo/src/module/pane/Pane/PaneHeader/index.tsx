@@ -1,5 +1,5 @@
 import { Header } from "@flexive/core";
-import { usePane } from "core/store/PaneStore";
+import { usePane } from "core/store/pane/PaneStore";
 import { useCallback } from "react";
 import { DragCoords, useDrag } from "utility/drag";
 

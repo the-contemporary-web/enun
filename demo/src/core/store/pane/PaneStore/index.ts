@@ -1,11 +1,9 @@
 import { createHook } from "@enun/react";
 import { create } from "@enun/store";
-import { ID } from "core/constant/ID";
 import { Pane, PaneDisplay } from "core/entity/Pane";
-import { PaneRepository } from "core/repository/PaneRepository";
 import debounce from "lodash.debounce";
 
-import { createIntentStore } from "../IntentStore";
+import { UpdatePaneIntentStore } from "../intent";
 
 interface PaneStore {
   pane: Pane;
@@ -13,34 +11,26 @@ interface PaneStore {
   updateDisplay: (partial: Partial<PaneDisplay>) => void;
 }
 
-const UpdatePaneIntent = createIntentStore<unknown, [Pane], { id: ID["PANE"] }>({
-  key: ({ id }) => id,
-  to: ({ id }, pane) => PaneRepository.updatePane(id, pane),
-  config: {
-    retryBusyRequest: true,
-  },
-});
-
 const PaneStore = create<PaneStore, { pane: Pane }>()
   .key(({ pane }) => ({ paneId: pane.id }))
   .define(({ injected: { pane }, compose, set }) => {
-    const updateIntent = compose(UpdatePaneIntent.use({ id: pane.id }));
-    updateIntent.subscribe(({ status }) => {
-      set({ updating: status === "BUSY" });
-    });
-
-    const debouncedUpdate = debounce((pane: Pane) => {
+    const updateIntent = compose(UpdatePaneIntentStore.use({ id: pane.id }));
+    const excuteUpdateDebounced = debounce((pane: Pane) => {
       void updateIntent.get().execute(pane);
     }, 500);
+
     const update = (fn: (prev: Pane) => Pane) => {
       set(prev => {
         const newPane = fn(prev.pane);
-        debouncedUpdate(newPane);
+        excuteUpdateDebounced(newPane);
         return {
           pane: newPane,
         };
       });
     };
+    updateIntent.subscribe(({ status }) => {
+      set({ updating: status === "BUSY" });
+    });
 
     const updateDisplay = (partial: Partial<PaneDisplay>) => {
       update(prev => ({

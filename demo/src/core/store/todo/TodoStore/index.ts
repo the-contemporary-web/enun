@@ -2,7 +2,7 @@ import { Todo } from "@entity/Todo";
 import { createHook } from "@enun/react";
 import { create, StoreImpl } from "@enun/store";
 
-import { RichTextContentStore } from "../RichTextContentStore";
+import { RichTextContentStore } from "../../RichTextContentStore";
 
 interface TodoStore {
   todo: Todo;
@@ -46,6 +46,6 @@ const TodoStore = create<TodoStore, { todo: Todo }>()
     };
   });
 
-const useTodo = createHook(TodoStore);
+const [useTodo, useTodoStore] = createHook(TodoStore);
 
-export { TodoStore, useTodo };
+export { TodoStore, useTodo, useTodoStore };
