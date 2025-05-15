@@ -3,10 +3,10 @@ import { Timestamp } from "./_utility";
 import { Todo } from "./Todo";
 
 type TodoList = {
-  id: ID["TODO_LIST"];
+  readonly id: ID["TODO_LIST"];
+  readonly createdAt: Timestamp;
   title: string;
   todos: Todo[];
-  createdAt: Timestamp;
 };
 
 export type { TodoList };

@@ -1,0 +1,54 @@
+---
+description: 
+globs: demo/**/*
+alwaysApply: false
+---
+# Demo Project Structure
+
+This document describes the structure of the demo project, which is a React-based web application built with Vite and TypeScript.
+
+## Project Overview
+
+The demo project is a modern web application that uses React 19, TypeScript, and Vite as its core technologies. It follows a modular architecture with clear separation of concerns.
+
+## Source Code Structure (`src/`)
+
+### Core Module (`core/`)
+- `store/` - State management implementation and store configurations
+- `repository/` - Data access layer and repository implementations (e.g., PaneRepository)
+- `helper/` - Core utility functions and helper methods
+- `constant/` - Application-wide constants and configuration values
+- `entity/` - Core domain models and type definitions
+
+### Design System (`design/`)
+- `util/` - Design system utilities and helper functions
+- `style/` - Global styles, themes, and design tokens
+- `component/` - Reusable design system components
+- `hook/` - Custom React hooks for design system functionality
+
+### Other Directories
+- `module/` - Feature modules and business logic components
+- `ui/` - React components and UI elements
+- `utility/` - Helper functions and utilities
+
+## Key Features
+- Uses React 19 with TypeScript
+- Implements a repository pattern (e.g., PaneRepository)
+- Modular architecture with clear separation of concerns
+- Styled with CSS/SASS
+- Uses Vite for fast development and building
+
+## Development Scripts
+- `yarn dev` - Start development server
+- `yarn build` - Build for production
+- `yarn preview` - Preview production build
+- `yarn lint:check` - Check for linting issues
+- `yarn lint:fix` - Fix linting issues
+- `yarn format:fix` - Format code with Prettier
+
+## Dependencies
+- Core: React, React DOM
+- UI: @enun/react, @radix-ui/colors
+- State Management: @enun/store
+- Utilities: lodash.debounce, nanoid
+- Development: TypeScript, Vite, SASS

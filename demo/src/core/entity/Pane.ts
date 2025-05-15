@@ -1,10 +1,10 @@
-import { ID } from "core/constant/ID";
-import { PANE_CONTENT_TYPE } from "core/constant/PANE_CONTENT_TYPE";
+import { ID } from "../constant/ID";
+import { PANE_CONTENT_TYPE } from "../constant/PANE_CONTENT_TYPE";
 
 type PaneContent =
   | {
-      type: PANE_CONTENT_TYPE["MEMO"];
-      memoId: ID["MEMO"];
+      readonly type: PANE_CONTENT_TYPE["MEMO"];
+      readonly memoId: ID["MEMO"];
     }
   | {
       type: PANE_CONTENT_TYPE["TODO_LIST"];
@@ -21,7 +21,7 @@ type PaneDisplay = {
 };
 
 type Pane = {
-  id: ID["PANE"];
+  readonly id: ID["PANE"];
   content: PaneContent;
   display: PaneDisplay;
 };

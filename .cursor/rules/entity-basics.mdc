@@ -1,0 +1,88 @@
+---
+description: 
+globs: demo/**/*
+alwaysApply: false
+---
+# Entity Basics
+
+## Description
+Entities are the core business objects of the application. They represent the fundamental business concepts and rules that are essential to the application's purpose. In a clean architecture perspective, entities:
+
+- Express business logic and rules
+- Serve as the Single Source of Truth (SSOT) for the entire project
+- Are independent of any specific framework or technology
+- Remain unchanged regardless of changes in the application's infrastructure or delivery mechanism
+
+## File Organization
+- Each entity should have its own file named after the entity (e.g., `Todo.ts`, `Pane.ts`)
+- Place all entity files in `demo/src/core/entity/`
+- One entity per file, unless types are closely related
+- Use proper type references between entities
+
+Example:
+```typescript
+// Memo.ts
+import { RichTextContent } from "./RichTextContent";
+
+type Memo = {
+  readonly id: ID["MEMO"];
+  content: RichTextContent;  // Using proper type reference
+  readonly createdAt: Timestamp;
+};
+```
+
+- Place utility types (e.g., `Timestamp`) in separate files
+
+Example:
+```typescript
+// _utility.ts
+type Timestamp = number;
+export type { Timestamp };
+
+// Memo.ts
+import { Timestamp } from "./_utility";
+```
+
+## Imports
+- Only import from:
+  - `../constant/` directory for constants
+  - Other files within the `./entity` directory
+- Use relative paths for imports (they will be the shortest path)
+- Example:
+  ```typescript
+  import { ID } from "../constant/ID";
+  import { Todo } from "./Todo";
+  ```
+
+## Entity Structure
+- Entity files should ONLY contain type definitions and their exports
+- No functions, classes, or other code should be included
+- Types should be defined at the top of the file
+- Use descriptive type names that match the entity name
+
+## Type Exports
+- Export all types at the bottom of the file
+- Only export types that are used by other entities
+- Internal types (like base types) should not be exported
+- Example:
+  ```typescript
+  // Internal type - not exported
+  type BaseUser = {
+    id: ID["USER"];
+    name: string;
+  };
+
+  // External types - exported
+  type AdminUser = BaseUser & {
+    role: "admin";
+    permissions: string[];
+  };
+
+  type RegularUser = BaseUser & {
+    role: "user";
+    preferences: Record<string, unknown>;
+  };
+
+  export type { AdminUser, RegularUser };
+  ```
+

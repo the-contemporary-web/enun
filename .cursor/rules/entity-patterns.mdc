@@ -1,0 +1,78 @@
+---
+description: 
+globs: demo/**/*
+alwaysApply: false
+---
+# Entity Patterns
+
+This guide outlines advanced patterns and best practices for writing entities in the `./demo` directory.
+
+## Base Types and Inheritance
+- Use base types when multiple variants share common properties
+- Extend base types using intersection types for variants
+- Name variants consistently with their base type
+- Example:
+  ```typescript
+  // Base type with common properties
+  type BaseTodo = {
+    id: ID["TODO"];
+    name: string;
+    done: boolean;
+  };
+
+  // Variants extending base type
+  type ToggleTodo = BaseTodo & {
+    type: TODO_TYPE["TOGGLE"];
+  };
+
+  type ReportTodo = BaseTodo & {
+    type: TODO_TYPE["REPORT"];
+    report: RichTextContent;
+    minReportLength: number;
+  };
+  ```
+
+## Discriminated Unions
+- Use enum types as discriminator fields
+- Place discriminator field first in each variant
+- Keep variant-specific fields after the discriminator
+- Example:
+  ```typescript
+  type PaneContent =
+    | {
+        type: PANE_CONTENT_TYPE["MEMO"];  // discriminator field
+        memoId: ID["MEMO"];
+      }
+    | {
+        type: PANE_CONTENT_TYPE["TODO_LIST"];  // discriminator field
+        todoListId: ID["TODO_LIST"];
+      };
+  ```
+
+## Property Modifiers
+- Use `readonly` modifier to indicate that a property represents an immutable business concept
+- This is for documentation purposes only, as entities are typically immutable in React applications
+- Use optional properties (`?`) sparingly and document why they're optional
+- Example:
+  ```typescript
+  type Todo = {
+    readonly id: ID["TODO"];  // Immutable business concept
+    readonly createdAt: Timestamp;  // Immutable business concept
+    name: string; // Mutable content
+    description?: string;  // Optional with reason
+  };
+  ```
+
+## Field Ordering
+- Place primary identifier at the very top of the type definition.
+- Place readonly fields at the top of the type definition
+- Example:
+  ```typescript
+  type Memo = {
+    readonly id: ID["MEMO"];        // 
+    readonly createdAt: Timestamp;  // Immutable fields first
+    content: RichTextContent;       // Mutable fields next
+    modifiedAt?: Timestamp;         
+  };
+  ```
+

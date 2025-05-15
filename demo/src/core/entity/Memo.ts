@@ -1,11 +1,11 @@
-import { ID } from "core/constant/ID";
-
+import { ID } from "../constant/ID";
 import { Timestamp } from "./_utility";
+import { RichTextContent } from "./RichTextContent";
 
 type Memo = {
-  id: ID["MEMO"];
-  content: string;
-  createdAt: Timestamp;
+  readonly id: ID["MEMO"];
+  readonly createdAt: Timestamp;
+  content: RichTextContent;
   modifiedAt?: Timestamp;
 };
 
