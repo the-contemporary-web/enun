@@ -19,7 +19,6 @@ const paneDisplayToStyle = (display: PaneDisplay): CSSProperties => {
     left: display.left,
     width: display.width,
     height: display.height,
-    backgroundColor: "red",
     zIndex: 1000 - display.order,
   };
 };

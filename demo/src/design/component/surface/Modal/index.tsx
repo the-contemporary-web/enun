@@ -8,11 +8,11 @@ type ModalProps = PropsOf<"article"> & {
   zIndex?: number;
 };
 
-export const Modal = ({ disabled, focusable, focus, className, zIndex, ...props }: ModalProps) => {
+export const Modal = ({ disabled, focusable, focus, className, zIndex, style, ...props }: ModalProps) => {
   return (
     <Article
-      className={cn("floating", { disabled, focusable, disablable: focusable, focus }, "trans-soft", className)}
-      style={{ zIndex }}
+      className={cn("floating", { disabled, focusable, disablable: focusable, focus }, className)}
+      style={{ ...style, zIndex }}
       {...props}
     />
   );

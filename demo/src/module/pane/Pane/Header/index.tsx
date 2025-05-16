@@ -1,9 +1,9 @@
-import { Header } from "@flexive/core";
+import { Header as FlexiveHeader } from "@flexive/core";
 import { usePane } from "core/store/pane/PaneStore";
 import { useCallback } from "react";
 import { DragCoords, useDrag } from "utility/drag";
 
-export const PaneHeader = () => {
+export const Header = () => {
   const { updateDisplay } = usePane();
 
   const handleDrag = useCallback(
@@ -21,13 +21,12 @@ export const PaneHeader = () => {
   });
 
   return (
-    <Header
-      style={{ backgroundColor: "blue" }}
+    <FlexiveHeader
       sizeM={50}
       onMouseDown={e => {
         e.preventDefault();
         drag(e);
       }}
-    ></Header>
+    ></FlexiveHeader>
   );
 };

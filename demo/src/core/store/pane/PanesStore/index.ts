@@ -21,8 +21,8 @@ const PanesStore = create<PanesStore>().define(({ set, compose /*, decompose */ 
       const newPanes = panes.map(pane => PaneStore.use({ pane }))
       return {
         panes: newPanes,
-        }
-        */
+      }
+      */
       prev.panes.forEach(store => {
         store.destroy();
       });
