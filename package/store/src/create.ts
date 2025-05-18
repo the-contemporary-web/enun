@@ -1,8 +1,9 @@
-import { StoreBuilder } from "./store";
+import { StoreBuilderImpl } from "./store";
+import { Dependencies } from "./type";
+import { Storable } from "./type";
 
-const create = <T extends object, Deps extends object = object>() => {
-  const builder = new StoreBuilder<T, Deps>({});
-  return builder;
+const create = <T extends Storable, Deps extends Dependencies>() => {
+  return new StoreBuilderImpl<T, Deps>({});
 };
 
 export { create };

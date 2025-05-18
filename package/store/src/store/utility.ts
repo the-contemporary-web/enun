@@ -1,6 +1,7 @@
-import { Store } from "./Store";
+import { Store } from "../type";
+import { Storable, Dependencies } from "../type";
 
-type TypeOf<S extends Store<object, object>> = S extends Store<infer T, object> ? T : never;
-type DepsOf<S extends Store<object, object>> = S extends Store<object, infer Deps> ? Deps : never;
+type TypeOf<S extends Store<Storable, Dependencies>> = S extends Store<infer T, Dependencies> ? T : never;
+type DepsOf<S extends Store<Storable, Dependencies>> = S extends Store<Storable, infer Deps> ? Deps : never;
 
 export type { DepsOf, TypeOf };

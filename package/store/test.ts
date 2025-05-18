@@ -1,7 +1,7 @@
 import { useStore } from "zustand";
 import { createStore } from "zustand/vanilla";
 
-import { create, globalCacheManager, StoreImpl } from "./index";
+import { create, globalCacheManager, StoreApi } from "./index";
 
 /**
  * Zustand Test
@@ -37,7 +37,7 @@ interface TextStore {
   clear: () => void;
 }
 
-const TextStore = create<TextStore, { text: string }>().define(({ injected, set }) => {
+const TextStore = create<TextStore, [{ text: string }]>().define(({ set }, { text }) => {
   const write = (text: string) => {
     set({ text });
   };
@@ -46,15 +46,15 @@ const TextStore = create<TextStore, { text: string }>().define(({ injected, set 
   };
 
   return {
-    text: injected.text,
+    text,
     write,
     clear,
   };
 });
 
-const globalTextStore = TextStore.use({ text: "This is global!" });
-const globalTextStore2 = TextStore.use({ text: "This must be global too!" });
-const localTextStore = TextStore.appendKey("local").use({ text: "This is local!" });
+const globalTextStore = TextStore({ text: "This is global!" });
+const globalTextStore2 = TextStore({ text: "This must be global too!" });
+const localTextStore = TextStore.local()({ text: "This is local!" });
 
 const inspect = () => {
   console.log("global1:", globalTextStore.get().text);
@@ -98,12 +98,12 @@ setTimeout(() => {
  */
 
 interface TextWithCountStore {
-  textStore: StoreImpl<TextStore>;
+  textStore: StoreApi<TextStore>;
   count: number;
 }
 
-const TextWithCountStore = create<TextWithCountStore, { text: string }>().define(({ injected, compose, set }) => {
-  const textStore = compose(TextStore.appendKey({ purpose: "countTest" }).local().use({ text: injected.text }));
+const TextWithCountStore = create<TextWithCountStore, [{ text: string }]>().define(({ compose, set }, { text }) => {
+  const [textStore] = compose(TextStore.local()({ text }));
   textStore.subscribe(({ text }) => {
     set({
       count: text.length,
@@ -112,11 +112,11 @@ const TextWithCountStore = create<TextWithCountStore, { text: string }>().define
 
   return {
     textStore,
-    count: injected.text.length,
+    count: text.length,
   };
 });
 
-const globalTextWithCountStore = TextWithCountStore.use({ text: "" });
+const globalTextWithCountStore = TextWithCountStore({ text: "" });
 
 const inspectCount = () => {
   console.log("text:", globalTextWithCountStore.get().textStore.get().text);

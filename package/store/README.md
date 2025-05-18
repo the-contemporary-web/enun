@@ -1,6 +1,14 @@
 # @enun/store
 
 ```tsx
+SomeStore({ id: 1 });
+SomeStore.forEach(() => {});
+
+const { store, get, set, subscribe, destroy } = SomeStore({ id: 1 });
+const [] = SomeStore.ifExist({ id: 1 });
+```
+
+```tsx
 import { createHook } from "@enun/react";
 import { create, StoreImpl } from "@enun/store";
 import { Pane } from "core/entity/Pane";
