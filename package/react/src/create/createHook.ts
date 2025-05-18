@@ -1,13 +1,13 @@
-import { Store } from "@enun/store";
+import { Dependencies, Storable, Store } from "@enun/store";
 
-import { createUseStoreContext } from "./createUseStoreContext";
-import { createUseStoreInterface } from "./createUseStoreInterface";
+import { createUseStoreApi } from "./createUseStoreApi";
+import { createUseStore } from "./createUseStore";
 
-const createHook = <T extends object, Deps extends object>(store: Store<T, Deps>) => {
-  const useStoreContext = createUseStoreContext(store);
-  const useStoreInterface = createUseStoreInterface(store);
+const createHook = <T extends Storable, Deps extends Dependencies>(store: Store<T, Deps>) => {
+  const useStore = createUseStore(store);
+  const useStoreContext = createUseStoreApi(store);
 
-  return [useStoreInterface, useStoreContext] as const;
+  return [useStore, useStoreContext] as const;
 };
 
 export { createHook };

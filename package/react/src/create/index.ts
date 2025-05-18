@@ -1,3 +1,3 @@
 export * from "./createHook";
-export * from "./createUseStoreContext";
-export * from "./createUseStoreInterface";
+export * from "./createUseStore";
+export * from "./createUseStoreApi";
