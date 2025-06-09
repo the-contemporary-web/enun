@@ -26,13 +26,14 @@ export default tseslint.config(
       "@typescript-eslint/consistent-type-definitions": "off",
       "@typescript-eslint/prefer-function-type": "off",
       "@typescript-eslint/no-unnecessary-type-parameters": "warn",
+      "@typescript-eslint/no-invalid-void-type": "off",
       "simple-import-sort/imports": "error",
       "simple-import-sort/exports": "error",
     },
   },
   // React-specific Rules
   {
-    files: ["package/react/**/*.{ts,tsx}", "demo/**/*.{ts,tsx}"],
+    files: ["package/react/**/*.{ts,tsx}", "package/react-new/**/*.{ts,tsx}", "demo/**/*.{ts,tsx}"],
     plugins: {
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,

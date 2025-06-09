@@ -1,5 +1,5 @@
 {
-  "name": "@enun/react-old",
+  "name": "@enun/react",
   "version": "0.3.0",
   "type": "module",
   "scripts": {
@@ -19,7 +19,7 @@
     }
   },
   "peerDependencies": {
-    "@enun/store": "workspace:^",
+    "@enun/state": "workspace:^",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

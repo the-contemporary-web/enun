@@ -9,6 +9,7 @@
   "scripts": {
     "demo": "yarn workspace demo",
     "store": "yarn workspace @enun/store",
+    "state": "yarn workspace @enun/state",
     "react": "yarn workspace @enun/react",
     "lint:check": "yarn workspaces foreach -A -p run lint:check",
     "lint:fix": "yarn workspaces foreach -A -p run lint:fix",
