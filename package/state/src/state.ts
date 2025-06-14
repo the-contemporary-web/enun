@@ -1,28 +1,31 @@
 import { nanoid } from "nanoid";
 
+import { compose as _compose, Composition } from "./compose";
 import { HashedKey, hashKey, injectKey, RawKey } from "./key";
 import { isPromiseLike } from "./promise";
 import { createStore, Store } from "./store";
 import { notify } from "./subscribe";
 import { transform, Transformer } from "./transform";
 
-interface State<Value, Action = unknown> {
+interface State<Value> {
   key: HashedKey;
-  action: Action;
   value: Value;
   version: number;
-  storeRef: Store<InternalState<Value, Action>>;
+  storeRef: Store<InternalState<Value>>;
   promise?: PromiseLike<Value>;
   error?: unknown;
+  compositionRef?: Composition;
 }
-interface InternalState<Value, Action = unknown> extends Omit<State<Value, Action>, "value"> {
+interface InternalState<Value> extends Omit<State<Value>, "value"> {
   value: Value | PromiseLike<Value>;
 }
 
-interface Statement<Value, Deps extends unknown[] = unknown[], Action = unknown> {
+interface StatementInformation<Value> {
   baseKey: HashedKey;
-  store: Store<InternalState<Value, Action>>;
-  (...deps: Deps): InternalState<Value, Action>;
+  store: Store<InternalState<Value>>;
+}
+interface Statement<Value, Deps extends unknown[] = unknown[]> extends StatementInformation<Value> {
+  (...deps: Deps): InternalState<Value>;
 }
 
 type Set<Value> = (
@@ -30,27 +33,26 @@ type Set<Value> = (
 ) => void;
 
 interface StateApi<Value> {
+  key: HashedKey;
   get: () => Value;
   set: Set<Value>;
   setStrict: (value: Value) => void;
+  compose: <StateValue>(state: InternalState<StateValue>) => Promise<State<StateValue>>;
+}
+
+interface StateOptions<Value, Deps extends unknown[] = []> {
+  is: (api: StateApi<Value>, ...deps: Deps) => Value | PromiseLike<Value>;
+  as?: (...deps: Deps) => RawKey | true;
 }
 
 const state =
   <Value, Deps extends unknown[] = []>() =>
-  <Action>({
-    is,
-    as,
-    acts,
-  }: {
-    is: (...deps: Deps) => Value | PromiseLike<Value>;
-    as?: (...deps: Deps) => RawKey | true;
-    acts?: (api: StateApi<Value>) => Action;
-  }): Statement<Value, Deps, Action> => {
+  ({ is, as }: StateOptions<Value, Deps>): Statement<Value, Deps> => {
     const baseKey = nanoid();
-    const store = createStore<InternalState<Value, Action>>(baseKey);
+    const store = createStore<InternalState<Value>>(baseKey);
 
     const createApi = (key: HashedKey): StateApi<Value> => {
-      const getState = (): State<Value, Action> => {
+      const getState = (): State<Value> => {
         const state = store.get(key);
         if (!state) {
           throw new Error(`State not found for key: ${key}`);
@@ -58,7 +60,7 @@ const state =
         if (isPromiseLike(state.value)) {
           throw new Error("State is not ready");
         }
-        return state as State<Value, Action>;
+        return state as State<Value>;
       };
 
       const get = () => {
@@ -92,10 +94,21 @@ const state =
         setStrict(newValue);
       };
 
-      return { get, set, setStrict };
+      const compose = <StateValue>(state: InternalState<StateValue>): Promise<State<StateValue>> => {
+        _compose(key, state);
+        return awaitState(state);
+      };
+
+      return {
+        key,
+        get,
+        set,
+        setStrict,
+        compose,
+      };
     };
 
-    const inject = (...deps: Deps): InternalState<Value, Action> => {
+    const statement = (...deps: Deps): InternalState<Value> => {
       const injectedKey = injectKey(as?.(...deps));
       const hashedKey = hashKey(baseKey, injectedKey);
 
@@ -105,16 +118,13 @@ const state =
         return prev;
       }
 
-      const value = is(...deps);
+      const api = createApi(hashedKey);
+      const value = is(api, ...deps);
 
       if (isPromiseLike(value)) {
-        const api = createApi(hashedKey);
-        const action = acts?.(api) as Action;
-
-        const state: InternalState<Value, Action> = {
+        const state: InternalState<Value> = {
           key: hashedKey,
           value,
-          action,
           version: 0,
           storeRef: store,
         };
@@ -125,31 +135,26 @@ const state =
         store.set(hashedKey, state);
         return state;
       }
-      const api = createApi(hashedKey);
-      const action = acts?.(api) as Action;
 
-      return {
+      const newState: State<Value> = {
         key: hashedKey,
         value,
-        action,
         version: 0,
         storeRef: store,
       };
+      store.set(hashedKey, newState);
+      return newState;
     };
 
-    const statement = inject;
-    Object.assign(statement, {
+    const information: StatementInformation<Value> = {
       baseKey,
       store,
-    });
-
-    return statement as Statement<Value, Deps, Action>;
+    };
+    Object.assign(statement, information);
+    return statement as Statement<Value, Deps>;
   };
 
-const assureState = <Value, Action = unknown>(
-  key: HashedKey,
-  store: Store<InternalState<Value, Action>>,
-): State<Value, Action> => {
+const assureState = <Value>(key: HashedKey, store: Store<InternalState<Value>>): State<Value> => {
   const currentState = store.get(key);
   if (!currentState) {
     throw new Error(`State not found for key: ${store.key}.${key}`);
@@ -157,12 +162,10 @@ const assureState = <Value, Action = unknown>(
   if (isPromiseLike(currentState.value)) {
     throw new Error("State is not ready");
   }
-  return currentState as State<Value, Action>;
+  return currentState as State<Value>;
 };
 
-const awaitState = async <Value, Action = unknown>(
-  state: InternalState<Value, Action>,
-): Promise<State<Value, Action>> => {
+const awaitState = async <Value>(state: InternalState<Value>): Promise<State<Value>> => {
   if (isPromiseLike(state.value)) {
     await state.value;
     return assureState(state.key, state.storeRef);
@@ -170,11 +173,11 @@ const awaitState = async <Value, Action = unknown>(
   return assureState(state.key, state.storeRef);
 };
 
-const read = <Value, Action = unknown>(state: State<Value, Action>): Value => {
+const read = <Value>(state: State<Value>): Value => {
   return assureState(state.key, state.storeRef).value;
 };
 
-const writeStrict = <Value, Action = unknown>(state: State<Value, Action>, value: Value) => {
+const writeStrict = <Value>(state: State<Value>, value: Value) => {
   const currentState = assureState(state.key, state.storeRef);
   currentState.value = value;
   currentState.promise = undefined;
@@ -182,8 +185,8 @@ const writeStrict = <Value, Action = unknown>(state: State<Value, Action>, value
   currentState.version++;
 };
 
-const write = <Value, Action = unknown>(
-  state: State<Value, Action>,
+const write = <Value>(
+  state: State<Value>,
   input: Partial<Value> | Transformer<Value> | PromiseLike<Partial<Value>> | PromiseLike<Transformer<Value>>,
 ) => {
   const currentState = assureState(state.key, state.storeRef);

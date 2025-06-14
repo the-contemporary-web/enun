@@ -1,7 +1,7 @@
 import {
   abortDestroy,
   assureState,
-  destroy,
+  destroyIfNoRef,
   InternalState,
   isPromiseLike,
   State,
@@ -52,14 +52,11 @@ const useStateOf = <T, Deps extends unknown[], Actions>(
   }
 
   useEffect(() => {
-    const lastState = currentState;
     const unsubscribe = subscribe(currentState, rerender);
     abortDestroy(currentState.key);
     return () => {
-      const noSubscriptionsLeft = unsubscribe();
-      if (noSubscriptionsLeft) {
-        destroy(lastState);
-      }
+      unsubscribe();
+      destroyIfNoRef(currentState);
     };
   }, [currentState]);
 

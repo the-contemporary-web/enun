@@ -1,44 +1,60 @@
 import { HashedKey } from "./key";
 import { assureState, InternalState } from "./state";
 
-const subscriptions = new Map<HashedKey, Set<() => void>>();
+interface Subscription {
+  key: HashedKey;
+  subscribers: Set<() => void>;
+}
+const subscriptions = new Map<HashedKey, Subscription>();
 
-const subscribe = <Value, Action = unknown>(state: InternalState<Value, Action>, callback: () => void) => {
+const createSubscription = (key: HashedKey) => {
+  const newSubscription: Subscription = {
+    key,
+    subscribers: new Set(),
+  };
+  subscriptions.set(key, newSubscription);
+  return newSubscription;
+};
+const subscribe = <Value>(state: InternalState<Value>, callback: () => void) => {
   const cb = callback;
   const currentState = assureState(state.key, state.storeRef);
-  const existingSubscription = subscriptions.get(currentState.key);
+  const subscription = subscriptions.get(currentState.key) ?? createSubscription(currentState.key);
 
-  if (existingSubscription) {
-    existingSubscription.add(cb);
-  } else {
-    subscriptions.set(currentState.key, new Set([cb]));
-  }
+  subscription.subscribers.add(cb);
 
-  // returns true if there's no more subscriptions left
-  return () => {
+  const unsubscribe = () => {
     const existingSubscription = subscriptions.get(currentState.key);
     if (existingSubscription) {
-      existingSubscription.delete(cb);
-      if (existingSubscription.size === 0) {
-        subscriptions.delete(currentState.key);
-        return true;
-      }
+      existingSubscription.subscribers.delete(cb);
     }
-    return true;
   };
+
+  if (state.compositionRef) {
+    state.compositionRef.unsubscribers.push(unsubscribe);
+  }
+
+  return unsubscribe;
 };
 
 const notify = (key: HashedKey) => {
   const existingSubscription = subscriptions.get(key);
   if (existingSubscription) {
-    existingSubscription.forEach(cb => {
+    existingSubscription.subscribers.forEach(cb => {
       cb();
     });
   }
+};
+
+const isSubscriptionsLeft = (key: HashedKey) => {
+  const existingSubscription = subscriptions.get(key);
+  if (existingSubscription) {
+    return existingSubscription.subscribers.size > 0;
+  }
+  return false;
 };
 
 const getSubscriptions = () => {
   return subscriptions;
 };
 
-export { getSubscriptions, notify, subscribe };
+export { getSubscriptions, isSubscriptionsLeft, notify, subscribe };
