@@ -1,4 +1,4 @@
-import { awaitState, destroy, getDefaultStoreMap, state } from "./index";
+import { awaitState, debugStateStores, destroy, state } from "./index";
 
 type ID = number;
 
@@ -89,7 +89,7 @@ const createDebugButton = () => {
 
   const debugButton = document.createElement("button");
   const handleDebug = () => {
-    console.log(getDefaultStoreMap());
+    console.log(debugStateStores());
   };
 
   debugButton.addEventListener("click", handleDebug);

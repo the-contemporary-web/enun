@@ -1,3 +1,4 @@
+export * from "./src/any";
 export * from "./src/compose";
 export * from "./src/destroy";
 export * from "./src/key";

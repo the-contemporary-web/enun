@@ -1,55 +1,38 @@
+import { createStore, Store } from "@enun/store";
+
+import { AnyStateStore } from "./any";
 import { HashedKey } from "./key";
+import { InternalState } from "./state";
 
-type Store<Stored> = {
+interface StateStore<Value> extends Store<HashedKey, InternalState<Value>> {
   key: HashedKey;
-  get: (key: HashedKey) => Stored | undefined;
-  set: (key: HashedKey, value: Stored) => void;
-  delete: (key: HashedKey) => void;
-  forEach: (callback: (value: Stored, key: HashedKey) => void) => void;
-  original: Map<HashedKey, Stored>;
-};
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type StoreMap = Map<HashedKey, Store<any>>;
+}
 
-const defaultStoreMap: StoreMap = new Map();
+const stateStores = createStore<HashedKey, AnyStateStore>({
+  shouldDelete: store => store.base.size === 0,
+});
 
-const createStore = <Stored>(baseKey: HashedKey): Store<Stored> => {
-  const prev = defaultStoreMap.get(baseKey);
-  if (prev) {
-    return prev as Store<Stored>;
-  }
-
-  const storedMap = new Map<HashedKey, Stored>();
-
-  const store = {
-    key: baseKey,
-    get: (key: HashedKey) => storedMap.get(key),
-    set: (key: HashedKey, value: Stored) => storedMap.set(key, value),
-    delete: (key: HashedKey) => storedMap.delete(key),
-    forEach: (callback: (value: Stored, key: HashedKey) => void) => {
-      storedMap.forEach(callback);
-    },
-    original: storedMap,
+const createStateStore = <Value>(key: HashedKey) => {
+  const stateStore = createStore<HashedKey, InternalState<Value>>({});
+  const stateStoreWithKey: StateStore<Value> = {
+    ...stateStore,
+    key,
   };
-
-  defaultStoreMap.set(baseKey, store);
-
-  return store;
+  stateStores.set(key, stateStoreWithKey);
+  return stateStoreWithKey;
 };
 
-const isStoredLeft = (key: HashedKey) => {
-  const store = defaultStoreMap.get(key);
-  if (!store) return true;
-  return store.original.size > 0;
+const isStatesLeft = (key: HashedKey) => {
+  return stateStores.alive(key);
 };
 
-const deleteStore = (key: HashedKey) => {
-  defaultStoreMap.delete(key);
+const deleteStateStore = (key: HashedKey) => {
+  stateStores.delete(key);
 };
 
-const getDefaultStoreMap = () => {
+const debugStateStores = () => {
   const tree: Record<string, Record<string, unknown>> = {};
-  for (const [key, value] of defaultStoreMap.entries()) {
+  for (const [key, value] of stateStores.base.entries()) {
     const subTree: Record<string, unknown> = {};
     value.forEach((value, key) => {
       subTree[key] = value;
@@ -59,5 +42,36 @@ const getDefaultStoreMap = () => {
   return tree;
 };
 
-export { createStore, deleteStore, getDefaultStoreMap, isStoredLeft };
-export type { Store };
+export { createStateStore, debugStateStores, deleteStateStore, isStatesLeft };
+export type { StateStore };
+
+// const createStore = <Stored>(baseKey: HashedKey): Store<Stored> => {
+//   const prev = defaultStoreMap.get(baseKey);
+//   if (prev) {
+//     return prev as Store<Stored>;
+//   }
+
+//   const storedMap = new Map<HashedKey, Stored>();
+
+//   const store = {
+//     key: baseKey,
+//     get: (key: HashedKey) => storedMap.get(key),
+//     set: (key: HashedKey, value: Stored) => storedMap.set(key, value),
+//     delete: (key: HashedKey) => storedMap.delete(key),
+//     forEach: (callback: (value: Stored, key: HashedKey) => void) => {
+//       storedMap.forEach(callback);
+//     },
+//     original: storedMap,
+//   };
+
+//   defaultStoreMap.set(baseKey, store);
+
+//   return store;
+// };
+
+// const deleteStore = (key: HashedKey) => {
+//   defaultStoreMap.delete(key);
+// };
+
+// export { createStore, deleteStore, getDefaultStoreMap, isStoredLeft };
+// export type { StateStore };

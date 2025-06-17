@@ -25,6 +25,7 @@
     "vite-plugin-dts": "^4.5.3"
   },
   "dependencies": {
+    "@enun/store": "workspace:^",
     "deepmerge": "^4.3.1",
     "immer": "^10.1.1",
     "nanoid": "^5.1.5"

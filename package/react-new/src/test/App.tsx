@@ -5,7 +5,7 @@ import { States, useStateOf } from "../../index";
 import { CountState } from "./store";
 
 const debugSubscriptions = () => {
-  console.log(JSON.stringify(Array.from(getSubscriptions().entries()), null, 2));
+  console.log(JSON.stringify(Array.from(getSubscriptions().base.entries()), null, 2));
 };
 
 export const App = () => {

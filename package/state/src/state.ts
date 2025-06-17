@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 import { compose as _compose, Composition } from "./compose";
 import { HashedKey, hashKey, injectKey, RawKey } from "./key";
 import { isPromiseLike } from "./promise";
-import { createStore, Store } from "./store";
+import { createStateStore, StateStore } from "./store";
 import { notify } from "./subscribe";
 import { transform, Transformer } from "./transform";
 
@@ -11,7 +11,7 @@ interface State<Value> {
   key: HashedKey;
   value: Value;
   version: number;
-  storeRef: Store<InternalState<Value>>;
+  storeRef: StateStore<Value>;
   promise?: PromiseLike<Value>;
   error?: unknown;
   compositionRef?: Composition;
@@ -22,7 +22,7 @@ interface InternalState<Value> extends Omit<State<Value>, "value"> {
 
 interface StatementInformation<Value> {
   baseKey: HashedKey;
-  store: Store<InternalState<Value>>;
+  store: StateStore<Value>;
 }
 interface Statement<Value, Deps extends unknown[] = unknown[]> extends StatementInformation<Value> {
   (...deps: Deps): InternalState<Value>;
@@ -49,7 +49,7 @@ const state =
   <Value, Deps extends unknown[] = []>() =>
   ({ is, as }: StateOptions<Value, Deps>): Statement<Value, Deps> => {
     const baseKey = nanoid();
-    const store = createStore<InternalState<Value>>(baseKey);
+    const store = createStateStore<Value>(baseKey);
 
     const createApi = (key: HashedKey): StateApi<Value> => {
       const getState = (): State<Value> => {
@@ -154,7 +154,7 @@ const state =
     return statement as Statement<Value, Deps>;
   };
 
-const assureState = <Value>(key: HashedKey, store: Store<InternalState<Value>>): State<Value> => {
+const assureState = <Value>(key: HashedKey, store: StateStore<Value>): State<Value> => {
   const currentState = store.get(key);
   if (!currentState) {
     throw new Error(`State not found for key: ${store.key}.${key}`);

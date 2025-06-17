@@ -1,10 +1,12 @@
+import { createStore } from "@enun/store";
+
+import { AnyInternalState } from "./any";
 import { HashedKey } from "./key";
 import { InternalState } from "./state";
 
 interface Composition {
   key: HashedKey;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  composes: InternalState<any>[];
+  composes: AnyInternalState[];
   unsubscribers: (() => void)[];
 }
 interface Tracker {
@@ -12,32 +14,31 @@ interface Tracker {
   composedBy: HashedKey[];
 }
 
-const compositions = new Map<HashedKey, Composition>();
-const trackers = new Map<HashedKey, Tracker>();
-
-const createComposition = (key: HashedKey) => {
-  const newComposition = {
-    key,
+const compositions = createStore<HashedKey, Composition>({
+  init: () => ({
+    key: "",
     composes: [],
     unsubscribers: [],
-  };
-  compositions.set(key, newComposition);
-  return newComposition;
-};
-const createTracker = (key: HashedKey) => {
-  const newTracker = {
-    key,
+  }),
+  shouldDelete: composition => {
+    return composition.composes.length === 0 && composition.unsubscribers.length === 0;
+  },
+});
+const trackers = createStore<HashedKey, Tracker>({
+  init: () => ({
+    key: "",
     composedBy: [],
-  };
-  trackers.set(key, newTracker);
-  return newTracker;
-};
+  }),
+  shouldDelete: tracker => {
+    return tracker.composedBy.length === 0;
+  },
+});
 
 const compose = <Value>(key: HashedKey, state: InternalState<Value>) => {
-  const composition = compositions.get(key) ?? createComposition(key);
+  const composition = compositions.safeGet(key);
   composition.composes.push(state);
 
-  const tracker = trackers.get(state.key) ?? createTracker(state.key);
+  const tracker = trackers.safeGet(state.key);
   tracker.composedBy.push(key);
 
   state.compositionRef = composition;
@@ -51,9 +52,7 @@ const decompose = (state: InternalState<unknown>) => {
       const tracker = trackers.get(composed.key);
       if (tracker) {
         tracker.composedBy.splice(tracker.composedBy.indexOf(state.key), 1);
-        if (tracker.composedBy.length === 0) {
-          trackers.delete(composed.key);
-        }
+        trackers.clean(composed.key);
       }
     });
     compositions.delete(state.key);
@@ -65,11 +64,7 @@ const getComposition = (key: HashedKey) => {
 };
 
 const isComposedElsewhere = (key: HashedKey) => {
-  const tracker = trackers.get(key);
-  if (!tracker) {
-    return false;
-  }
-  return tracker.composedBy.length > 0;
+  return trackers.alive(key);
 };
 
 export { compose, decompose, getComposition, isComposedElsewhere };

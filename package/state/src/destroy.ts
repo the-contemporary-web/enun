@@ -1,7 +1,8 @@
+import { AnyInternalState } from "./any";
 import { decompose, getComposition, isComposedElsewhere } from "./compose";
 import { HashedKey } from "./key";
 import { InternalState } from "./state";
-import { deleteStore, isStoredLeft } from "./store";
+import { deleteStateStore, isStatesLeft } from "./store";
 import { isSubscriptionsLeft } from "./subscribe";
 
 interface Destroy {
@@ -17,8 +18,8 @@ const destroyStateIfClean = (state: InternalState<unknown>) => {
   if (isComposedElsewhere(state.key)) return;
   if (isSubscriptionsLeft(state.key)) return;
   state.storeRef.delete(state.key);
-  if (!isStoredLeft(state.storeRef.key)) {
-    deleteStore(state.storeRef.key);
+  if (!isStatesLeft(state.storeRef.key)) {
+    deleteStateStore(state.storeRef.key);
   }
 };
 
@@ -37,8 +38,7 @@ const executeDestroy = () => {
   destroyTimeout = undefined;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const destroy = (state: InternalState<any>) => {
+const destroy = (state: AnyInternalState) => {
   destroyQueue.push({
     key: state.key,
     state,

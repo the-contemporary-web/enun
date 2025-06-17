@@ -1,3 +1,5 @@
+import { createStore } from "@enun/store";
+
 import { HashedKey } from "./key";
 import { assureState, InternalState } from "./state";
 
@@ -5,7 +7,9 @@ interface Subscription {
   key: HashedKey;
   subscribers: Set<() => void>;
 }
-const subscriptions = new Map<HashedKey, Subscription>();
+const subscriptions = createStore<HashedKey, Subscription>({
+  shouldDelete: ({ subscribers }) => subscribers.size < 1,
+});
 
 const createSubscription = (key: HashedKey) => {
   const newSubscription: Subscription = {
@@ -23,10 +27,8 @@ const subscribe = <Value>(state: InternalState<Value>, callback: () => void) => 
   subscription.subscribers.add(cb);
 
   const unsubscribe = () => {
-    const existingSubscription = subscriptions.get(currentState.key);
-    if (existingSubscription) {
-      existingSubscription.subscribers.delete(cb);
-    }
+    subscription.subscribers.delete(cb);
+    subscriptions.clean(currentState.key);
   };
 
   if (state.compositionRef) {
@@ -46,11 +48,7 @@ const notify = (key: HashedKey) => {
 };
 
 const isSubscriptionsLeft = (key: HashedKey) => {
-  const existingSubscription = subscriptions.get(key);
-  if (existingSubscription) {
-    return existingSubscription.subscribers.size > 0;
-  }
-  return false;
+  return subscriptions.alive(key);
 };
 
 const getSubscriptions = () => {

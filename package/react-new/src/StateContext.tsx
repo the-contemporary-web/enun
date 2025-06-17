@@ -1,25 +1,23 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-type-parameters */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-import { HashedKey, InternalState } from "@enun/state";
+import { AnyInternalState, HashedKey, InternalState } from "@enun/state";
 import { createContext, PropsWithChildren, useCallback, useContext, useMemo } from "react";
 
 interface StateContext {
-  stateMap: Map<HashedKey, InternalState<any>>;
+  stateMap: Map<HashedKey, AnyInternalState>;
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
   readState: <S extends InternalState<unknown>>(baseKey: HashedKey) => S;
 }
 
 const StateContext = createContext<StateContext | undefined>(undefined);
 
-const useStateContextWith = (state: InternalState<any> | InternalState<any>[]): StateContext => {
+const useStateContextWith = (state: AnyInternalState | AnyInternalState[]): StateContext => {
   const context = useContext(StateContext);
 
   const stateMap = useMemo(() => {
-    let newStateMap: Map<HashedKey, InternalState<any>>;
+    let newStateMap: Map<HashedKey, AnyInternalState>;
     if (context) {
-      newStateMap = new Map<HashedKey, InternalState<any>>(context.stateMap);
+      newStateMap = new Map<HashedKey, AnyInternalState>(context.stateMap);
     } else {
-      newStateMap = new Map<HashedKey, InternalState<any>>();
+      newStateMap = new Map<HashedKey, AnyInternalState>();
     }
 
     if (Array.isArray(state)) {
@@ -31,6 +29,7 @@ const useStateContextWith = (state: InternalState<any> | InternalState<any>[]): 
   }, [context, state]);
 
   const readState = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
     <S extends InternalState<unknown>>(baseKey: HashedKey): S => {
       const state = stateMap.get(baseKey);
       if (!state) {
@@ -45,7 +44,7 @@ const useStateContextWith = (state: InternalState<any> | InternalState<any>[]): 
 };
 
 type StatesProps = PropsWithChildren & {
-  state: InternalState<any> | InternalState<any>[];
+  state: AnyInternalState | AnyInternalState[];
 };
 const States = (props: StatesProps) => {
   const context = useStateContextWith(props.state);

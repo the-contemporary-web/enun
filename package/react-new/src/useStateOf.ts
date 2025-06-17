@@ -6,7 +6,7 @@ import {
   isPromiseLike,
   State,
   Statement,
-  Store,
+  StateStore,
   subscribe,
 } from "@enun/state";
 import { use, useContext, useEffect, useReducer } from "react";
@@ -79,7 +79,7 @@ const isStatement = <Value, Deps extends unknown[]>(
 const isStateInputEqual = <Value, Deps extends unknown[]>(
   input: InternalState<Value> | Statement<Value, Deps>,
   stateToCompare: InternalState<Value>,
-  storeToCompare: Store<InternalState<Value>>,
+  storeToCompare: StateStore<Value>,
 ) => {
   if (isStatement(input)) {
     return Object.is(input.store, storeToCompare);
