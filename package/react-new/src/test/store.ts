@@ -12,19 +12,16 @@ const getCountAfterDelay = (delay: number) => {
 type CountState = {
   name: string;
   data: number;
+  add: () => void;
+  subtract: () => void;
 };
 
 const CountState = state<CountState, [number]>()({
-  is: async id => {
+  as: id => id,
+  is: async ({ set }, id) => {
     const name = `Count-${id.toString()}`;
     const data = await getCountAfterDelay(2000);
-    return {
-      name,
-      data,
-    };
-  },
-  as: id => id,
-  acts: ({ set }) => {
+
     const add = () => {
       set(prev => {
         prev.data++;
@@ -36,6 +33,8 @@ const CountState = state<CountState, [number]>()({
       });
     };
     return {
+      name,
+      data,
       add,
       subtract,
     };

@@ -58,13 +58,16 @@ type CounterProps = {
   counterId?: number;
 };
 const Counter = ({ counterId }: CounterProps) => {
-  const { value, action } = useStateOf(counterId !== undefined ? CountState(counterId) : CountState);
+  const {
+    value: { name, data, add, subtract },
+  } = useStateOf(counterId !== undefined ? CountState(counterId) : CountState);
+
   return (
     <div>
-      <div>{value.name}</div>
-      <div>{value.data}</div>
-      <button onClick={action.add}>add</button>
-      <button onClick={action.subtract}>subtract</button>
+      <div>{name}</div>
+      <div>{data}</div>
+      <button onClick={add}>add</button>
+      <button onClick={subtract}>subtract</button>
     </div>
   );
 };

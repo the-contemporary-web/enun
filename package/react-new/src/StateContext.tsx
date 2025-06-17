@@ -5,21 +5,21 @@ import { HashedKey, InternalState } from "@enun/state";
 import { createContext, PropsWithChildren, useCallback, useContext, useMemo } from "react";
 
 interface StateContext {
-  stateMap: Map<HashedKey, InternalState<any, any>>;
+  stateMap: Map<HashedKey, InternalState<any>>;
   readState: <S extends InternalState<unknown>>(baseKey: HashedKey) => S;
 }
 
 const StateContext = createContext<StateContext | undefined>(undefined);
 
-const useStateContextWith = (state: InternalState<any, any> | InternalState<any, any>[]): StateContext => {
+const useStateContextWith = (state: InternalState<any> | InternalState<any>[]): StateContext => {
   const context = useContext(StateContext);
 
   const stateMap = useMemo(() => {
-    let newStateMap: Map<HashedKey, InternalState<any, any>>;
+    let newStateMap: Map<HashedKey, InternalState<any>>;
     if (context) {
-      newStateMap = new Map<HashedKey, InternalState<any, any>>(context.stateMap);
+      newStateMap = new Map<HashedKey, InternalState<any>>(context.stateMap);
     } else {
-      newStateMap = new Map<HashedKey, InternalState<any, any>>();
+      newStateMap = new Map<HashedKey, InternalState<any>>();
     }
 
     if (Array.isArray(state)) {
@@ -45,7 +45,7 @@ const useStateContextWith = (state: InternalState<any, any> | InternalState<any,
 };
 
 type StatesProps = PropsWithChildren & {
-  state: InternalState<any, any> | InternalState<any, any>[];
+  state: InternalState<any> | InternalState<any>[];
 };
 const States = (props: StatesProps) => {
   const context = useStateContextWith(props.state);

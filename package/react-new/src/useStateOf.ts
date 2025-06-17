@@ -1,7 +1,7 @@
 import {
   abortDestroy,
   assureState,
-  destroyIfNoRef,
+  destroy,
   InternalState,
   isPromiseLike,
   State,
@@ -13,9 +13,9 @@ import { use, useContext, useEffect, useReducer } from "react";
 
 import { StateContext } from "./StateContext";
 
-const useStateOf = <T, Deps extends unknown[], Actions>(
-  input: InternalState<T, Actions> | Statement<T, Deps, Actions>,
-): State<T, Actions> => {
+const useStateOf = <Value, Deps extends unknown[]>(
+  input: InternalState<Value> | Statement<Value, Deps>,
+): State<Value> => {
   const context = useContext(StateContext);
   const store = isStatement(input) ? input.store : input.storeRef;
   const key = (() => {
@@ -56,7 +56,7 @@ const useStateOf = <T, Deps extends unknown[], Actions>(
     abortDestroy(currentState.key);
     return () => {
       unsubscribe();
-      destroyIfNoRef(currentState);
+      destroy(currentState);
     };
   }, [currentState]);
 
@@ -70,16 +70,16 @@ const useStateOf = <T, Deps extends unknown[], Actions>(
   };
 };
 
-const isStatement = <T, Deps extends unknown[], Actions>(
-  input: InternalState<T, Actions> | Statement<T, Deps, Actions>,
-): input is Statement<T, Deps, Actions> => {
+const isStatement = <Value, Deps extends unknown[]>(
+  input: InternalState<Value> | Statement<Value, Deps>,
+): input is Statement<Value, Deps> => {
   return "store" in input;
 };
 
-const isStateInputEqual = <T, Deps extends unknown[], Actions>(
-  input: InternalState<T, Actions> | Statement<T, Deps, Actions>,
-  stateToCompare: InternalState<T, Actions>,
-  storeToCompare: Store<InternalState<T, Actions>>,
+const isStateInputEqual = <Value, Deps extends unknown[]>(
+  input: InternalState<Value> | Statement<Value, Deps>,
+  stateToCompare: InternalState<Value>,
+  storeToCompare: Store<InternalState<Value>>,
 ) => {
   if (isStatement(input)) {
     return Object.is(input.store, storeToCompare);
