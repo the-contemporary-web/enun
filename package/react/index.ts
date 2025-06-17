@@ -1,2 +1,2 @@
-export * from "./src/context";
-export * from "./src/create";
+export * from "./src/StateContext";
+export * from "./src/useStateOf";

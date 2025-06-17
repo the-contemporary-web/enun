@@ -1,10 +1,9 @@
 {
-  "name": "@enun/react",
-  "version": "0.4.0",
-  "type": "module",
+  "name": "@enun/state",
+  "version": "0.1.0",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc && vite build",
     "preview": "vite preview",
     "lint:check": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -26,17 +25,17 @@
       }
     }
   },
-  "peerDependencies": {
-    "@enun/state": "workspace:^",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
-  },
+  "license": "MIT",
   "devDependencies": {
-    "@types/react": "^19.0.10",
-    "@types/react-dom": "^19.0.4",
-    "@vitejs/plugin-react": "^4.3.4",
+    "@types/node": "^22.14.1",
     "typescript": "^5.8.3",
     "vite": "^6.2.0",
     "vite-plugin-dts": "^4.5.3"
+  },
+  "dependencies": {
+    "@enun/store": "workspace:^",
+    "deepmerge": "^4.3.1",
+    "immer": "^10.1.1",
+    "nanoid": "^5.1.5"
   }
 }
