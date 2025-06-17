@@ -212,26 +212,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@enun/react-old@workspace:package/react":
+"@enun/react@workspace:^, @enun/react@workspace:package/react":
   version: 0.0.0-use.local
-  resolution: "@enun/react-old@workspace:package/react"
-  dependencies:
-    "@types/react": "npm:^19.0.10"
-    "@types/react-dom": "npm:^19.0.4"
-    "@vitejs/plugin-react": "npm:^4.3.4"
-    typescript: "npm:^5.8.3"
-    vite: "npm:^6.2.0"
-    vite-plugin-dts: "npm:^4.5.3"
-  peerDependencies:
-    "@enun/store": "workspace:^"
-    react: ^19.0.0
-    react-dom: ^19.0.0
-  languageName: unknown
-  linkType: soft
-
-"@enun/react@workspace:^, @enun/react@workspace:package/react-new":
-  version: 0.0.0-use.local
-  resolution: "@enun/react@workspace:package/react-new"
+  resolution: "@enun/react@workspace:package/react"
   dependencies:
     "@types/react": "npm:^19.0.10"
     "@types/react-dom": "npm:^19.0.4"
