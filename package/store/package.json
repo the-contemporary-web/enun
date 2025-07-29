@@ -1,6 +1,6 @@
 {
   "name": "@enun/store",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -12,6 +12,10 @@
   },
   "main": "./index.ts",
   "module": "./index.ts",
+  "types": "./index.ts",
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "main": "./dist/index.cjs",
     "module": "./dist/index.mjs",

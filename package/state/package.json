@@ -1,6 +1,6 @@
 {
   "name": "@enun/state",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -13,6 +13,9 @@
   "main": "./index.ts",
   "module": "./index.ts",
   "types": "./index.ts",
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "main": "./dist/index.cjs",
     "module": "./dist/index.mjs",
